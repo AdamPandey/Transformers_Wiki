@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('release_date');
-            $table->varchar('image');
+            $table->text('image');
             $table->string('director');
             $table->timestamps();
         });

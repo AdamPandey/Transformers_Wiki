@@ -13,6 +13,7 @@ Route::get('/dashboard', function () {
 
 
 Route::get('/movies',[MovieController::class,'index'])->name('movies.index');
+Route::get('/movies/{movie}',[MovieController::class,'show'])->name('movies.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

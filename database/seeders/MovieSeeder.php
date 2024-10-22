@@ -26,6 +26,8 @@ class MovieSeeder extends Seeder
                 'director'=>'Michael Bay'],
             ['title'=> 'Transformers The Last Knight','release_date'=>'2017','image'=>'5.jpg',
                 'director'=>'Michael Bay'],
+            ['title'=> 'Transformers One','release_date'=>'2024','image'=>'6.jpg',
+            'director'=>'Josh Cooley']
         ]);
     }
 }

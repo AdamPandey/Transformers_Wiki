@@ -37,7 +37,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //
+        return view('movies.show')->with('movie', $movie);
     }
 
     /**
