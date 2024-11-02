@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -21,7 +22,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        return view('movies.create');
     }
 
     /**
@@ -29,7 +30,32 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate input
+        $request->validate([
+            'title' => 'required',
+            'release_date' => 'required|max:500',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'director' => 'required'
+        ]);
+
+        // Check if the image is uploaded and handle it
+        if ($request->hasFile('image')) {
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('images/movies'), $imageName);
+        }
+
+        // Create a book record in the database
+        Movie::create([
+        'title' => $request->title,
+        'release_date' => $request->release_date,
+        'image' => $imageName, // Store the image URL in the DB
+        'director' => $request->director,
+        'created_at' => now(),
+        'updated_at' => now()
+        ]);
+
+        // Redirect to the index page with a success message
+        return to_route('movies.index')->with('success', 'Movie created successfully!');
     }
 
     /**
