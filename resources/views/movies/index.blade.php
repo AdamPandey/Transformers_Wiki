@@ -12,6 +12,7 @@
                     <h3 class="font-semibold text-lg mb-4">List of Transformers movies:</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($movies as $movie)
+                    <div class="border p-4 rounded-lg shadow-md">    
                         <a href="{{ route('movies.show', $movie)}}">
                             <x-movie-card
                                 :title="$movie->title"
@@ -28,14 +29,15 @@
                                     Edit
                                 </a>
             
-                                <!-- <form action="{{ route('movies.destroy', $movie) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                                <form action="{{ route('movies.destroy', $movie) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-500 hover:bg-red-700 text-gray-600 font-bold py-2 px-4 rounded">
                                         Delete
                                     </button>
-                                </form> -->
+                                </form>
                             </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>
