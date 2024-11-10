@@ -21,8 +21,6 @@ class MovieController extends Controller
             return $query->where('title', 'like', '%' . $search . '%');
         })->paginate(6);
 
-        
-
         return view('movies.index', compact('movies', 'search'));
     }
 
