@@ -9,33 +9,31 @@ use Illuminate\Support\Facades\Storage;
 class MovieController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all movies, with optional search and director filtering.
      */
     public function index(Request $request)
     {
-        $movies = Movie::all();
+        // Retrieve all movies and apply search filters if provided
+        $movies = Movie::query();
         $search = $request->input('search');
         $director = $request->input('director');
 
-        $movies = Movie::query();
-
-        // Fetch movies based on search query
+        // Filter movies based on search criteria
         if ($search) {
             $movies->where('title', 'like', '%' . $search . '%');
         }
-
-        // Filter by director
         if ($director) {
             $movies->where('director', 'like', '%' . $director . '%');
         }
 
+        // Paginate results to display 6 movies per page
         $movies = $movies->paginate(6);
 
         return view('movies.index', compact('movies', 'search', 'director'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new movie.
      */
     public function create()
     {
@@ -43,11 +41,11 @@ class MovieController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created movie in the database.
      */
     public function store(Request $request)
     {
-        // Validate input
+        // Validate the incoming request data
         $request->validate([
             'title' => 'required',
             'release_date' => 'required|max:500',
@@ -55,20 +53,20 @@ class MovieController extends Controller
             'director' => 'required'
         ]);
 
-        // Check if the image is uploaded and handle it
+        // Handle the uploaded image file
         if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images/movies'), $imageName);
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/movies'), $imageName);
         }
 
-        // Create a book record in the database
+        // Create a new movie record in the database
         Movie::create([
-        'title' => $request->title,
-        'release_date' => $request->release_date,
-        'image' => $imageName, // Store the image URL in the DB
-        'director' => $request->director,
-        'created_at' => now(),
-        'updated_at' => now()
+            'title' => $request->title,
+            'release_date' => $request->release_date,
+            'image' => $imageName, // Save the image file name
+            'director' => $request->director,
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
         // Redirect to the index page with a success message
@@ -76,7 +74,7 @@ class MovieController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the details of a specific movie.
      */
     public function show(Movie $movie)
     {
@@ -84,7 +82,7 @@ class MovieController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing an existing movie.
      */
     public function edit(Movie $movie)
     {
@@ -92,38 +90,39 @@ class MovieController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified movie in the database.
      */
     public function update(Request $request, Movie $movie)
     {
+        // Validate the incoming request data for updates
         $request->validate([
             'title' => 'required',
             'release_date' => 'required|max:500',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Make image optional
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is optional
             'director' => 'required'
         ]);
 
         $oldImageName = $movie->image;
 
+        // Handle the uploaded image file if provided
         if ($request->hasFile('image')) {
-            // Generate a new image name
             $imageName = time() . '.' . $request->image->extension();
-            // Move the new image to the public directory
             $request->image->move(public_path('images/movies'), $imageName);
 
-            // Optionally delete the old image
+            // Optionally delete the old image file
             if ($oldImageName) {
                 Storage::delete(public_path('images/movies/' . $oldImageName));
             }
         } else {
-            // If no new image is uploaded, keep the old image name
+            // Keep the old image name if no new image is uploaded
             $imageName = $oldImageName;
         }
 
+        // Update the movie record with new data
         $movie->update([
             'title' => $request->title,
             'release_date' => $request->release_date,
-            'image' => $imageName, // Store the image URL in the DB
+            'image' => $imageName, // Save the image file name
             'director' => $request->director,
             'updated_at' => now()
         ]);
@@ -132,12 +131,11 @@ class MovieController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified movie from the database.
      */
     public function destroy(Movie $movie)
     {
-        $movie->delete();
- 
-        return redirect()->route('movies.index');
+        $movie->delete(); // Delete the movie record
+        return redirect()->route('movies.index'); // Redirect back to the movie index
     }
 }

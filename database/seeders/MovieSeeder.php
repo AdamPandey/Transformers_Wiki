@@ -5,16 +5,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Movie;
-use Carbon\Carbon;
+use Carbon\Carbon; // Import Carbon for date and time manipulation
 
-class MovieSeeder extends Seeder
+class MovieSeeder extends Seeder // Define the MovieSeeder class that extends the Seeder class
 {
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(): void // Method that will be executed to seed the movies table
     {
-        $currentTimestamp = Carbon::now();
+        $currentTimestamp = Carbon::now();// Get the current timestamp using Carbon (not used in the insert but can be useful)
+         // Insert multiple movie records into the movies table
         Movie::insert([
             ['title'=> 'Transformers','release_date'=>'2007','image'=>'1.jpg',
                 'director'=>'Michael Bay'],

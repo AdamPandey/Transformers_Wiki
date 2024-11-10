@@ -12,6 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <!-- :active="request()->routeIs('dashboard')": This checks if the current route matches the specified route (dashboard). If it does, the link will be marked as active, allowing for styling changes (like highlighting the link).-->
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
