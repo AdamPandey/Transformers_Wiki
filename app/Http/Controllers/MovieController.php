@@ -16,7 +16,6 @@ class MovieController extends Controller
         $movies = Movie::all();
         $search = $request->input('search');
         $director = $request->input('director');
-        $releaseYear = $request->input('release_year');
 
         $movies = Movie::query();
 
@@ -30,14 +29,9 @@ class MovieController extends Controller
             $movies->where('director', 'like', '%' . $director . '%');
         }
 
-        // Filter by release year
-        if ($releaseYear) {
-            $movies->whereYear('release_date', $releaseYear);
-        }
-
         $movies = $movies->paginate(6);
 
-        return view('movies.index', compact('movies', 'search', 'director', 'releaseYear'));
+        return view('movies.index', compact('movies', 'search', 'director'));
     }
 
     /**
