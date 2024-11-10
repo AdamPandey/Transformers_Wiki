@@ -11,10 +11,17 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="font-semibold text-lg mb-4">List of Transformers movies:</h3>
                     <form action="{{ route('movies.index') }}" method="GET" class="mb-4">
-                        <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Search for movies..." class="border rounded p-2">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Search
-                        </button>
+                        <div class="flex flex-col sm:flex-row sm:space-x-4">
+                            <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Search for movies..." class="border rounded p-2 flex-1">
+                            
+                            <input type="text" name="director" value="{{ old('director', $director) }}" placeholder="Filter by director..." class="border rounded p-2 flex-1 mt-2 sm:mt-0">
+                            
+                            <input type="number" name="release_year" value="{{ old('release_year', $releaseYear) }}" placeholder="Filter by release year..." class="border rounded p-2 flex-1 mt-2 sm:mt-0" min="1900" max="{{ date('Y') }}">
+                            
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 sm:mt-0">
+                                Filter
+                            </button>
+                        </div>
                     </form>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($movies as $movie)

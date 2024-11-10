@@ -15,13 +15,29 @@ class MovieController extends Controller
     {
         $movies = Movie::all();
         $search = $request->input('search');
-    
-        // Fetch movies based on search query
-        $movies = Movie::when($search, function ($query) use ($search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })->paginate(6);
+        $director = $request->input('director');
+        $releaseYear = $request->input('release_year');
 
-        return view('movies.index', compact('movies', 'search'));
+        $movies = Movie::query();
+
+        // Fetch movies based on search query
+        if ($search) {
+            $movies->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Filter by director
+        if ($director) {
+            $movies->where('director', 'like', '%' . $director . '%');
+        }
+
+        // Filter by release year
+        if ($releaseYear) {
+            $movies->whereYear('release_date', $releaseYear);
+        }
+
+        $movies = $movies->paginate(6);
+
+        return view('movies.index', compact('movies', 'search', 'director', 'releaseYear'));
     }
 
     /**
