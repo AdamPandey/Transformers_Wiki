@@ -10,6 +10,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h3 class="font-semibold text-lg mb-4">List of Transformers movies:</h3>
+                    <form action="{{ route('movies.index') }}" method="GET" class="mb-4">
+                        <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Search for movies..." class="border rounded p-2">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Search
+                        </button>
+                    </form>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($movies as $movie)
                     <div class="border p-4 rounded-lg shadow-md">    
@@ -38,6 +44,9 @@
                             </div>
                         </div>
                         @endforeach
+                    </div>
+                    <div class="mt-4">
+                        {{ $movies->links() }} <!-- This will render the pagination links -->
                     </div>
                 </div>
             </div>
