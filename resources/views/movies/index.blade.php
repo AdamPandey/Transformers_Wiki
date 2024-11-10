@@ -14,9 +14,14 @@
                         <div class="flex flex-col sm:flex-row sm:space-x-4">
                             <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Search for movies..." class="border rounded p-2 flex-1">
                             
-                            <input type="text" name="director" value="{{ old('director', $director) }}" placeholder="Filter by director..." class="border rounded p-2 flex-1 mt-2 sm:mt-0">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 sm:mt-0">
+                                Search
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:space-x-4 mt-4">
+                            <input type="text" name="director" value="{{ old('director', $director) }}" placeholder="Filter by director..." class="border rounded p-2 flex-1">
                             
-                            <input type="number" name="release_year" value="{{ old('release_year', $releaseYear) }}" placeholder="Filter by release year..." class="border rounded p-2 flex-1 mt-2 sm:mt-0" min="1900" max="{{ date('Y') }}">
+                            <input type="number" name="release_year" value="{{ old('release_year', $releaseYear) }}" placeholder="Filter by release year..." class="border rounded p-2 flex-1" min="1900" max="{{ date('Y') }}">
                             
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 sm:mt-0">
                                 Filter
