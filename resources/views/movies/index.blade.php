@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="font-semibold text-lg mb-4">List of Transformers movies:</h3>
 
-                    <!-- Search and filter form -->
+                    <!-- Search and filter form  -->
                     <form action="{{ route('movies.index') }}" method="GET" class="mb-4">
                         <div class="flex flex-col sm:flex-row sm:space-x-4">
                             <input type="text" name="search" value="{{ old('search', $search) }}" placeholder="Search for movies..." class="border rounded p-2 flex-1">
