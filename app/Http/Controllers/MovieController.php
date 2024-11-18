@@ -37,6 +37,9 @@ class MovieController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->role !== 'admin'){
+            return redirect()->route('movies.index')->with('error','Acess denied.');
+        }
         return view('movies.create');
     }
 
