@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('toys', function (Blueprint $table) {
             $table->id();
             $table->foreignId('movie_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('type')->nullable();
-            $table->text('image')->nullable();
-            $table->string('toyline')->nullable();
-            $table->integer('issue_date')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable();
+            $table->string('type');
+            $table->text('image');
+            $table->string('toyline');
+            $table->integer('issue_date');
             $table->timestamps();
         });
     }

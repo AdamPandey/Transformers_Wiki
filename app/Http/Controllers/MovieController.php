@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\Toy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    
+
     /**
      * Display a listing of all movies, with optional search and director filtering.
      */
@@ -82,7 +83,8 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        return view('movies.show')->with('movie', $movie);
+        $movie->load('toys.user');
+        return view('movies.show',compact('movie'));
     }
 
     /**

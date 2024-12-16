@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ToyController;
 use Illuminate\Support\Facades\Route;
 
 // Define a route for the home page that returns the welcome view
@@ -22,6 +23,11 @@ Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
 Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit'); // Show the form to edit a specific movie
 Route::put('/movies/{movie}', [MovieController::class, 'update'])->name('movies.update'); // Update a specific movie in the database
 Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy'); // Delete a specific movie from the database
+
+
+Route::resource('toys',ToyController::class);
+
+Route::post('movies/{movie}/toys',[ToyController::class, 'store'])->name('toys.store');
 
 // Protected routes for user profile management, requiring authentication
 Route::middleware('auth')->group(function () {
