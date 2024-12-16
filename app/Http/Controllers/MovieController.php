@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
+    
     /**
      * Display a listing of all movies, with optional search and director filtering.
      */
