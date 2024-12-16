@@ -18,4 +18,9 @@ class Movie extends Model // Define the Movie class that extends the base Model 
         'created_at',   // Timestamp for when the movie record was created
         'updated_at'    // Timestamp for when the movie record was last updated
     ];
+
+    public function toys()
+    {
+        return $this->hasMany(Toy::class);
+    }
 }
