@@ -92,11 +92,12 @@ class ToyController extends Controller
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images/toys'), $imageName);
+            $toy->image = $imageName;
         };
 
         $toy->update($request->only(['type','image','toyline','issue_date']));
 
-        return redirect()->route('toys.show',$toy->movie_id)
+        return redirect()->route('movies.show',$toy->movie_id)
                          ->with('success','Toy Listing updated succesfully.');
     }
 
@@ -105,6 +106,9 @@ class ToyController extends Controller
      */
     public function destroy(Toy $toy)
     {
-        //
+        if (auth()->user()->id != $toy->user_id && auth()->user()->role !== 'admin'){
+            $toy->delete();
+        }
+        return redirect()->route('movies.index'); // Redirect back to the movie index
     }
 }

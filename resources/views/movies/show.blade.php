@@ -42,7 +42,7 @@
                                             @method('delete')
                                             <x-danger-button :href="route('toys.destroy', $toy)"
                                                             onclick="event.preventDefault();this.closest('form').submit();">
-                                                {{__('Delete Review')}}
+                                                {{__('Delete Toy Listing')}}
                                             </x-danger-button>
                                         </form>
                                     @endif

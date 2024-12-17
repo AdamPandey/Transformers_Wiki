@@ -28,6 +28,7 @@ Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('mov
 Route::resource('toys',ToyController::class);
 
 Route::post('movies/{movie}/toys',[ToyController::class, 'store'])->name('toys.store');
+Route::delete('/movies/{movie}/toys', [ToyController::class, 'destroy'])->name('toys.destroy');
 
 // Protected routes for user profile management, requiring authentication
 Route::middleware('auth')->group(function () {
