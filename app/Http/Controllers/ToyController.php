@@ -106,9 +106,11 @@ class ToyController extends Controller
      */
     public function destroy(Toy $toy)
     {
-        if (auth()->user()->id != $toy->user_id && auth()->user()->role !== 'admin'){
-            $toy->delete();
+        if (auth()->user()->id != $toy->user_id && auth()->user()->role !== 'admin') {
+            return redirect()->route('movies.index')->with('error', 'Access denied.');
         }
-        return redirect()->route('movies.index'); // Redirect back to the movie index
+        $toy->delete();
+        return redirect()->route('movies.show', $toy->movie_id)
+                     ->with('success', 'Toy deleted successfully.'); 
     }
 }
