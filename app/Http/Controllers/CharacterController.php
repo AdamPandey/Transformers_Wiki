@@ -13,7 +13,8 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        //
+        $characters = Character::all(); // Fetch all characters
+        return view('characters.index', compact('characters')); // Pass characters to the view
     }
 
     /**
