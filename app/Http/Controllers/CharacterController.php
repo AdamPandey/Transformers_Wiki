@@ -22,7 +22,7 @@ class CharacterController extends Controller
      */
     public function create()
     {
-        //
+        return view('characters.create');
     }
 
     /**
@@ -30,7 +30,35 @@ class CharacterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bio' => 'required|max:500',
+            'alt_mode' => 'required',
+            'personality' => 'required',
+            'faction' => 'required'
+        ]);
+
+        // Handle the uploaded image file
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/characters'), $imageName);
+        }
+
+        // Create a new movie record in the database
+        Character::create([
+            'name' => $request->name,
+            'image' => $imageName,
+            'bio' => $request->bio,
+            'alt_mode' => $request->alt_mode,
+            'personality' => $request->personality,
+            'faction' => $request->faction,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // Redirect to the index page with a success message
+        return to_route('characters.index')->with('success', 'Character created successfully!');
     }
 
     /**

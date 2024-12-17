@@ -22,6 +22,9 @@
                     <x-nav-link :href="route('characters.index')" :active="request()->routeIs('characters.index')">
                         {{ __('View all Transformer Characters') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('characters.create')" :active="request()->routeIs('characters.create')">
+                        {{ __('Create Your own Transformer Character') }}
+                    </x-nav-link>
                     @if(auth()->user()->role === 'admin')
                         <x-nav-link :href="route('movies.create')" :active="request()->routeIs('movies.create')">
                             {{ __('Add a new Transformers movie') }}
