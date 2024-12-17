@@ -21,7 +21,7 @@
                     </div>
                     <h4 class="font-semibold text-md mt-8">Toys featured in this movie</h4>
                     @if($movie->toys->isEmpty())
-                        <p class="text-gray-600">No Toys added yet.<p>
+                        <p class="text-gray-600">No Toys added yet.</p>
                     @else
                         <ul class="mt-4 space-y-4">
                             @foreach($movie->toys as $toy)
@@ -33,15 +33,15 @@
                                     <p>{{$toy->issue_date}}</p>
 
 
-                                    @if($toy->user->is(auth()->user()) || auth()->user()->role === 'admin')
+                                    @if ($toy->user->is(auth()->user()) || auth()->user()->role === 'admin')
                                         <a href="{{ route('toys.edit', $toy) }}" class="bg-yellow-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
                                             {{__('Edit Toy listing')}}
                                         </a>
-                                        <form method="POST" action="{{ route('toys.destroy', $toy)}}">
+                                        <form method="POST" action="{{ route('toys.destroy', $toy) }}">
                                             @csrf
                                             @method('delete')
                                             <x-danger-button :href="route('toys.destroy', $toy)"
-                                                                onclick="event.preventDefault();this.closest('form')submit();"
+                                                            onclick="event.preventDefault();this.closest('form').submit();">
                                                 {{__('Delete Review')}}
                                             </x-danger-button>
                                         </form>

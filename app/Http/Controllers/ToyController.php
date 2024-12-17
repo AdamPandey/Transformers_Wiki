@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\Toy;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -69,7 +70,11 @@ class ToyController extends Controller
      */
     public function edit(Toy $toy)
     {
-        //
+        if (auth()->user()->id != $toy->user_id && auth()->user()->role !== 'admin'){
+            return redirect()->route('movies.index')->with('error','Aceess denied.');
+        }
+
+        return view('toys.edit',compact('toy'));
     }
 
     /**
@@ -77,7 +82,22 @@ class ToyController extends Controller
      */
     public function update(Request $request, Toy $toy)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|min:1|max:20',
+            'image' => 'required|mimes:jpeg,png,jpg,gif',
+            'toyline' => 'required|min:1|max:20',
+            'issue_date' => 'nullable|max:500',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/toys'), $imageName);
+        };
+
+        $toy->update($request->only(['type','image','toyline','issue_date']));
+
+        return redirect()->route('toys.show',$toy->movie_id)
+                         ->with('success','Toy Listing updated succesfully.');
     }
 
     /**
