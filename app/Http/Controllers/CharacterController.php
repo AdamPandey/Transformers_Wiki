@@ -128,6 +128,14 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        //
+        // Optionally, delete the associated image if it exists
+        if ($character->image) {
+            Storage::delete('images/characters/' . $character->image);
+        }
+
+        // Delete the character
+        $character->delete();
+
+        return redirect()->route('characters.index')->with('success', 'Character deleted successfully.');
     }
 }
