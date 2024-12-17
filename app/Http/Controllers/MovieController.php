@@ -83,6 +83,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
+        $movie->load('characters');
         $movie->load('toys.user');
         return view('movies.show',compact('movie'));
     }

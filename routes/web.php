@@ -4,6 +4,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ToyController;
 use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\ErrorController;
 use Illuminate\Support\Facades\Route;
 
 // Define a route for the home page that returns the welcome view
@@ -32,11 +33,20 @@ Route::post('movies/{movie}/toys',[ToyController::class, 'store'])->name('toys.s
 
 Route::resource('characters',CharacterController::class)->middleware('auth');
 
+Route::get('/error', [ErrorController::class, 'index'])->name('error.index');
+
 // Protected routes for user profile management, requiring authentication
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // Show the profile edit form
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update the user's profile information
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete the user's profile
+});
+
+Route::fallback(function () {
+    if (auth()->check()) {
+        return redirect()->route('error.index')->with('error', 'Merry Christmas Anne!');
+    }
+    return redirect('/');
 });
 
 // Include additional authentication routes defined in a separate file

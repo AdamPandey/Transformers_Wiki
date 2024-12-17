@@ -19,6 +19,22 @@
 
                         />
                     </div>
+                    <h4 class="font-semibold text-md mt-8">Related Characters</h4>
+                    @if($movie->characters->isEmpty())
+                        <p class="text-gray-600">No characters associated with this movie.</p>
+                    @else
+                        <ul class="mt-4 space-y-4">
+                            @foreach($movie->characters as $character)
+                                <li class="bg-gray-100 p-4 rounded-lg">
+                                    <p class="font-semibold">{{ $character->name }}</p>
+                                    <p>Biography: {{ $character->bio }}</p>
+                                    <p>Faction: {{ $character->faction }}</p>
+                                    <p>Personality: {{ $character->personality }}</p>
+                                    <!-- Add more character details as needed -->
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                     <h4 class="font-semibold text-md mt-8">Toys featured in this movie</h4>
                     @if($movie->toys->isEmpty())
                         <p class="text-gray-600">No Toys added yet.</p>
