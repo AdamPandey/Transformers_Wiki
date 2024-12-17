@@ -16,6 +16,7 @@
                     <x-character-form
                         :action="route('characters.store')"
                         :method="'POST'"
+                        :movies="$movies"
                     />
                 </div>
             </div>

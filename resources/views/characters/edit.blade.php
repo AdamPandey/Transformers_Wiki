@@ -22,6 +22,7 @@
                         :action="route('characters.update', $character)" 
                         :method="'PUT'" 
                         :character="$character"
+                        :movies="$movies"
                     />
                 </div>
             </div>

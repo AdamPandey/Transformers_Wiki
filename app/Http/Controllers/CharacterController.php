@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
 use App\Models\Character;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        $characters = Character::all(); // Fetch all characters
+        $characters = Character::with('movies')->get(); // Fetch all characters
         return view('characters.index', compact('characters')); // Pass characters to the view
     }
 
@@ -22,8 +23,9 @@ class CharacterController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('characters.create');
+    {   
+        $movies = Movie::all();
+        return view('characters.create', compact('movies'));
     }
 
     /**
@@ -31,35 +33,33 @@ class CharacterController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bio' => 'required|max:500',
             'alt_mode' => 'required',
             'personality' => 'required',
-            'faction' => 'required'
+            'faction' => 'required',
+            'movies' => 'array',
         ]);
-
+    
         // Handle the uploaded image file
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images/characters'), $imageName);
+            $validated['image'] = $imageName;
         }
-
-        // Create a new movie record in the database
-        Character::create([
-            'name' => $request->name,
-            'image' => $imageName,
-            'bio' => $request->bio,
-            'alt_mode' => $request->alt_mode,
-            'personality' => $request->personality,
-            'faction' => $request->faction,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
+    
+        // Create a new character record in the database
+        $character = Character::create($validated);
+    
+        // Attach selected movies to the character
+        if ($request->has('movies')) {
+            $character->movies()->attach($request->movies);
+        }
+    
         // Redirect to the index page with a success message
-        return to_route('characters.index')->with('success', 'Character created successfully!');
+        return redirect()->route('characters.index')->with('success', 'Character created successfully!');
     }
 
     /**
@@ -67,6 +67,7 @@ class CharacterController extends Controller
      */
     public function show(Character $character)
     {
+        $character->load('movies');
         return view('characters.show', compact('character'));
     }
 
@@ -75,7 +76,14 @@ class CharacterController extends Controller
      */
     public function edit(Character $character)
     {
-        return view('characters.edit', compact('character'));
+        // Fetch all movies
+        $movies = Movie::all();
+
+        // Get the IDs of the movies that the character is associated with
+        $characterMovies = $character->movies->pluck('id')->toArray();
+
+        // Return the edit view with the character, movies, and selected movies
+        return view('characters.edit', compact('character', 'movies', 'characterMovies'));
     }
 
     /**
@@ -83,44 +91,33 @@ class CharacterController extends Controller
      */
     public function update(Request $request, Character $character)
     {
-        $request->validate([
+        // Validate the incoming request
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image if provided
             'bio' => 'required|string',
             'alt_mode' => 'required|string',
             'personality' => 'required|string',
             'faction' => 'required|string',
+            'movies' => 'array',
         ]);
-
-        $oldImageName = $character->image;
-    
-        // Handle the uploaded image file if provided
         if ($request->hasFile('image')) {
+            // Handle the uploaded image file
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images/characters'), $imageName);
-
-            // Optionally delete the old image file
-            if ($oldImageName) {
-                Storage::delete(public_path('images/characters/' . $oldImageName));
-            }
+            $validated['image'] = $imageName; // Update the validated array with the new image name
         } else {
-            // Keep the old image name if no new image is uploaded
-            $imageName = $oldImageName;
+            // If no new image is uploaded, keep the existing image name
+            $validated['image'] = $character->image; // Retain the existing image
         }
 
-        // Update the movie record with new data
-        $character->update([
-            'name' => $request->name,
-            'image' => $imageName,
-            'bio' => $request->bio,
-            'alt_mode' => $request->alt_mode,
-            'personality' => $request->personality,
-            'faction' => $request->faction,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        $character->update($validated);
 
-        return to_route('characters.index')->with('success', 'Character updated successfully!');
+        if ($request->has('movies')) {
+            $character->movies()->sync($request->movies);
+        }
+        // Redirect back to the index page with a success message
+        return redirect()->route('characters.index')->with('success', 'Character updated successfully!');
     }
 
     /**
@@ -128,11 +125,7 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        // Optionally, delete the associated image if it exists
-        if ($character->image) {
-            Storage::delete('images/characters/' . $character->image);
-        }
-
+        $character->movies()->detach();
         // Delete the character
         $character->delete();
 

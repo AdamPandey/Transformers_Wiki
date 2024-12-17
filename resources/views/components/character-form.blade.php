@@ -1,4 +1,4 @@
-@props(['name', 'image', 'bio', 'alt_mode','personality', 'faction','action', 'method', 'character']) <!-- Define the properties that this component will accept -->
+@props(['name', 'image', 'bio', 'alt_mode','personality', 'faction','action', 'method', 'character', 'movies', 'characterMovies']) <!-- Define the properties that this component will accept -->
 
 <form action="{{ $action }}" method="POST" enctype="multipart/form-data"> <!-- Form element with action and method -->
     @csrf <!-- CSRF token for security -->
@@ -105,6 +105,30 @@
                 focus:ring-indigo-500 focus:border-indigo-500"
         />
         @error('faction') <!-- Display error message for title input -->
+            <p class="text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Select Movies</label>
+        <div class="mt-1">
+            @foreach($movies as $movie)
+                <div class="flex items-center">
+                    <input 
+                        type="checkbox" 
+                        name="movies[]" 
+                        id="movie_{{ $movie->id }}" 
+                        value="{{ $movie->id }}" 
+                        {{ in_array($movie->id, $characterMovies ?? []) ? 'checked' : '' }} 
+                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label for="movie_{{ $movie->id }}" class="ml-2 block text-sm text-gray-900">
+                        {{ $movie->title }}
+                    </label>
+                </div>
+            @endforeach
+        </div>
+        @error('movies')
             <p class="text-sm text-red-600">{{ $message }}</p>
         @enderror
     </div>
