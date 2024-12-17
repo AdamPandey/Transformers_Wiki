@@ -29,7 +29,7 @@ class MovieController extends Controller
         }
 
         // Paginate results to display 6 movies per page
-        $movies = $movies->paginate(6);
+        $movies = $movies->paginate(12);
 
         return view('movies.index', compact('movies', 'search', 'director'));
     }
