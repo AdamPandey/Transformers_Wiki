@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Movie;
+use App\Models\Character;
 use Carbon\Carbon; // Import Carbon for date and time manipulation
 
 class MovieSeeder extends Seeder // Define the MovieSeeder class that extends the Seeder class
@@ -16,7 +17,7 @@ class MovieSeeder extends Seeder // Define the MovieSeeder class that extends th
     {
         $currentTimestamp = Carbon::now();// Get the current timestamp using Carbon (not used in the insert but can be useful)
          // Insert multiple movie records into the movies table
-        Movie::insert([
+        $movies = [
             ['title'=> 'Transformers','release_date'=>'2007','image'=>'1.jpg',
                 'director'=>'Michael Bay'],
             ['title'=> 'Transformers Revenge of the fallen','release_date'=>'2009','image'=>'2.jpg',
@@ -53,6 +54,15 @@ class MovieSeeder extends Seeder // Define the MovieSeeder class that extends th
             'director'=>'Sam Register'],
             ['title'=> 'Transformers Prime','release_date'=>'2010','image'=>'18.jpg',
             'director'=>'Roberto Orci']
-        ]);
+        ];
+
+        foreach ($movies as $moviedata)
+        {
+            $movie = Movie::create(array_merge($moviedata, ['created_at' => $currentTimestamp, 'updated_at' =>$currentTimestamp]));
+
+            $characters = Character::inRandomOrder()->take(2)->pluck('id');
+
+            $movie->characters()->attach($characters);
+        }
     }
 }

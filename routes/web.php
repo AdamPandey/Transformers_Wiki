@@ -3,6 +3,7 @@
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ToyController;
+use App\Http\Controllers\CharacterController;
 use Illuminate\Support\Facades\Route;
 
 // Define a route for the home page that returns the welcome view
@@ -28,6 +29,8 @@ Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('mov
 Route::resource('toys',ToyController::class);
 
 Route::post('movies/{movie}/toys',[ToyController::class, 'store'])->name('toys.store');
+
+Route::resource('characters',CharacterController::class)->middleware('auth');
 
 // Protected routes for user profile management, requiring authentication
 Route::middleware('auth')->group(function () {

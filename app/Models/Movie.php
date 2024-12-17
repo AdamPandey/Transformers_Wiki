@@ -23,4 +23,8 @@ class Movie extends Model // Define the Movie class that extends the base Model 
     {
         return $this->hasMany(Toy::class);
     }
+
+    public function characters(){
+        return $this->belongsToMany(Character::class);
+    }
 }
