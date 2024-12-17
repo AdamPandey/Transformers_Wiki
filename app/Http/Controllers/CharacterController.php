@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Character;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CharacterController extends Controller
 {
@@ -74,7 +75,7 @@ class CharacterController extends Controller
      */
     public function edit(Character $character)
     {
-        //
+        return view('characters.edit', compact('character'));
     }
 
     /**
@@ -82,7 +83,44 @@ class CharacterController extends Controller
      */
     public function update(Request $request, Character $character)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image if provided
+            'bio' => 'required|string',
+            'alt_mode' => 'required|string',
+            'personality' => 'required|string',
+            'faction' => 'required|string',
+        ]);
+
+        $oldImageName = $character->image;
+    
+        // Handle the uploaded image file if provided
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/characters'), $imageName);
+
+            // Optionally delete the old image file
+            if ($oldImageName) {
+                Storage::delete(public_path('images/characters/' . $oldImageName));
+            }
+        } else {
+            // Keep the old image name if no new image is uploaded
+            $imageName = $oldImageName;
+        }
+
+        // Update the movie record with new data
+        $character->update([
+            'name' => $request->name,
+            'image' => $imageName,
+            'bio' => $request->bio,
+            'alt_mode' => $request->alt_mode,
+            'personality' => $request->personality,
+            'faction' => $request->faction,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return to_route('characters.index')->with('success', 'Character updated successfully!');
     }
 
     /**

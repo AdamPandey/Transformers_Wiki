@@ -1,4 +1,4 @@
-@props(['name', 'image', 'bio', 'alt_mode','personality', 'faction','action', 'method', 'movie']) <!-- Define the properties that this component will accept -->
+@props(['name', 'image', 'bio', 'alt_mode','personality', 'faction','action', 'method', 'character']) <!-- Define the properties that this component will accept -->
 
 <form action="{{ $action }}" method="POST" enctype="multipart/form-data"> <!-- Form element with action and method -->
     @csrf <!-- CSRF token for security -->
