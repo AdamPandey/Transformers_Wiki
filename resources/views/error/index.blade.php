@@ -26,7 +26,7 @@
             color: #718096; /* Gray color */
         }
     </style>
-    <meta http-equiv="refresh" content="5;url={{ route('movies.index') }}">
+    <meta http-equiv="refresh" content="3;url={{ route('movies.index') }}">
 </head>
 <body>
     <div>

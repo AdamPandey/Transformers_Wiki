@@ -9,6 +9,6 @@ class ErrorController extends Controller
 {
     public function index()
     {
-        return view('error.index'); // Make sure this matches the path to your view
+        return view('error.index');
     }
 }
