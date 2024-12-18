@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\Toy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class MovieController extends Controller
 {
@@ -83,9 +84,72 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
+        $apiKey = env('TMDB_API_KEY'); // Get your API key from the .env file
+        $searchResponse = Http::get("https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($movie->title));
+    
+        // Log the movie title being searched
+        \Log::info('Searching for movie:', ['title' => $movie->title]);
+    
+        $videos = [];
+        $backdrops = [];
+        $cast = [];
+        $tmdbMovieTitle = '';
+        $tmdbMovieId = null;
+    
+        if ($searchResponse->successful()) {
+            $searchResults = $searchResponse->json();
+    
+            // Log the search results for debugging
+            \Log::info('TMDb Search Results:', $searchResults);
+    
+            // Check if there are results
+            if (!empty($searchResults['results'])) {
+                // Get the first result (closest match)
+                $closestMatch = $searchResults['results'][0];
+                $tmdbMovieId = $closestMatch['id'];
+                $tmdbMovieTitle = $closestMatch['title'];
+    
+                // Fetch the movie details using the TMDb movie ID
+                $detailsResponse = Http::get("https://api.themoviedb.org/3/movie/{$tmdbMovieId}?api_key={$apiKey}&append_to_response=videos,credits");
+    
+                if ($detailsResponse->successful()) {
+                    $movieData = $detailsResponse->json();
+    
+                    // Get videos
+                    if (isset($movieData['videos']['results'])) {
+                        $videos = $movieData['videos']['results'];
+                    }
+    
+                    // Get backdrops
+                    if (isset($movieData['backdrop_path'])) {
+                        $backdrops[] = "https://image.tmdb.org/t/p/original" . $movieData['backdrop_path'];
+                    }
+    
+                    // Get cast
+                    if (isset($movieData['credits']['cast'])) {
+                        $cast = $movieData['credits']['cast'];
+                    }
+                } else {
+                    \Log::error('Failed to fetch movie details from TMDb', [
+                        'status' => $detailsResponse->status(),
+                        'message' => $detailsResponse->body(),
+                    ]);
+                }
+            } else {
+                \Log::warning('No search results found for movie', ['title' => $movie->title]);
+            }
+        } else {
+            \Log::error('Failed to search for movie in TMDb', [
+                'status' => $searchResponse->status(),
+                'message' => $searchResponse->body(),
+            ]);
+        }
+    
+        // Load related data
         $movie->load('characters');
         $movie->load('toys.user');
-        return view('movies.show',compact('movie'));
+    
+        return view('movies.show', compact('movie', 'videos', 'backdrops', 'cast', 'tmdbMovieTitle'));
     }
 
     /**

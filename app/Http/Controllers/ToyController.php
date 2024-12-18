@@ -83,12 +83,15 @@ class ToyController extends Controller
     public function update(Request $request, Toy $toy)
     {
         $request->validate([
-            'type' => 'required|string|min:1|max:20',
+            'type' => 'string|min:1|max:20',
             'image' => 'nullable|mimes:jpeg,png,jpg,gif', // Make image nullable if it's not required
-            'toyline' => 'required|min:1|max:20',
-            'issue_date' => 'nullable|integer|max:500',
+            'toyline' => 'string|min:1|max:20',
+            'issue_date' => 'nullable|integer',
         ], [
-            'issue_date.integer' => 'The issue date must be a valid number.', // Custom error message
+            'type.string' => 'The type field is mandatory.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'toyline.string' => 'The toyline field is mandatory.',
+            'issue_date.integer' => 'The issue date must be a valid number.',
         ]);
     
         // Update the toy's attributes

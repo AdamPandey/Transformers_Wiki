@@ -19,6 +19,40 @@
 
                         />
                     </div>
+                    <div class="container">
+                        <h1>{{ $movie->title }}</h1>
+                        <p>{{ $movie->overview }}</p>
+
+                        <h2>Backdrops</h2>
+                        @if(!empty($backdrops))
+                            @foreach($backdrops as $backdrop)
+                                <img src="{{ $backdrop }}" alt="Backdrop" style="width: 100%; height: auto;">
+                            @endforeach
+                        @else
+                            <p>No backdrops available.</p>
+                        @endif
+
+                        <h2>Videos</h2>
+                        @if(!empty($videos))
+                            @foreach($videos as $video)
+                                <h3>{{ $video['name'] }}</h3>
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video['key'] }}" frameborder="0" allowfullscreen></iframe>
+                            @endforeach
+                        @else
+                            <p>No videos available.</p>
+                        @endif
+
+                        <h2>Cast</h2>
+                        @if(!empty($cast))
+                            <ul>
+                                @foreach($cast as $actor)
+                                    <li>{{ $actor['name'] }} as {{ $actor['character'] }}</li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>No cast information available.</p>
+                        @endif
+                    </div>
                     <h4 class="font-semibold text-md mt-8">Related Characters</h4>
                     @if($movie->characters->isEmpty())
                         <p class="text-gray-600">No characters associated with this movie.</p>
@@ -44,7 +78,6 @@
                                 <li class="bg-gray-100 p-4 rounded-lg">
                                     <p class="font-semibold">{{$toy->user->name}} ({{$toy->created_at->format('M, d, Y')}})</p>
                                     <p>Type: {{$toy->type}}</p>
-                                    <p>Image Name: {{ $toy->image }}</p>
                                     <img src="{{ asset('images/toys/' . $toy->image) }}" alt="{{ $toy->type }}" class="w-32 h-32 object-cover">
                                     <p>Toyline: {{$toy->toyline}}</p>
                                     <p>{{$toy->issue_date}}</p>

@@ -26,7 +26,7 @@ Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])->name('movi
 Route::put('/movies/{movie}', [MovieController::class, 'update'])->name('movies.update'); // Update a specific movie in the database
 Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy'); // Delete a specific movie from the database
 
-
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 Route::resource('toys',ToyController::class);
 
 Route::post('movies/{movie}/toys',[ToyController::class, 'store'])->name('toys.store');
