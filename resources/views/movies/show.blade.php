@@ -44,6 +44,7 @@
                                 <li class="bg-gray-100 p-4 rounded-lg">
                                     <p class="font-semibold">{{$toy->user->name}} ({{$toy->created_at->format('M, d, Y')}})</p>
                                     <p>Type: {{$toy->type}}</p>
+                                    <p>Image Name: {{ $toy->image }}</p>
                                     <img src="{{ asset('images/toys/' . $toy->image) }}" alt="{{ $toy->type }}" class="w-32 h-32 object-cover">
                                     <p>Toyline: {{$toy->toyline}}</p>
                                     <p>{{$toy->issue_date}}</p>

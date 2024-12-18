@@ -14,7 +14,7 @@
                     <x-toy-form
                         :action="route('toys.update', $toy)"
                         :method="'PUT'"
-                        :review="$toy"
+                        :toy="$toy"
                     />
                 </div>
             </div>

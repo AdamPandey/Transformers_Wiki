@@ -47,7 +47,7 @@
             type="file"
             name="image"
             id="image"
-            {{ isset($book) ? '' : 'required' }} 
+            {{ isset($movie) ? '' : 'required' }} 
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
         />
         @error('image') <!-- Display error message for image upload -->

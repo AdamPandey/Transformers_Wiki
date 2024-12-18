@@ -84,21 +84,39 @@ class ToyController extends Controller
     {
         $request->validate([
             'type' => 'required|string|min:1|max:20',
-            'image' => 'required|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif', // Make image nullable if it's not required
             'toyline' => 'required|min:1|max:20',
-            'issue_date' => 'nullable|max:500',
+            'issue_date' => 'nullable|integer|max:500',
+        ], [
+            'issue_date.integer' => 'The issue date must be a valid number.', // Custom error message
         ]);
-
+    
+        // Update the toy's attributes
+        $toy->type = $request->type;
+        $toy->toyline = $request->toyline;
+        $toy->issue_date = $request->issue_date;
+    
         if ($request->hasFile('image')) {
+            // Check if the toy already has an image
+            if ($toy->image) {
+                // Delete the old image
+                $oldImagePath = public_path('images/toys/' . $toy->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath); // Delete the old image
+                }
+            }
+    
+            // Store the new image
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images/toys'), $imageName);
-            $toy->image = $imageName;
-        };
-
-        $toy->update($request->only(['type','image','toyline','issue_date']));
-
-        return redirect()->route('movies.show',$toy->movie_id)
-                         ->with('success','Toy Listing updated succesfully.');
+            $toy->image = $imageName; // Set the new image name
+        }
+    
+        // Save the toy with the updated attributes
+        $toy->save();
+    
+        return redirect()->route('movies.show', $toy->movie_id)
+                         ->with('success', 'Toy Listing updated successfully.');
     }
 
     /**
