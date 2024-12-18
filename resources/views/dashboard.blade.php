@@ -27,11 +27,6 @@
                                         View Characters
                                     </a>
                                 </li>
-                                <li class="text-center">
-                                    <a href="{{ route('toys.index') }}" class="block w-full text-center py-2 rounded-lg text-white transition duration-300 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                                        View Toys
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
