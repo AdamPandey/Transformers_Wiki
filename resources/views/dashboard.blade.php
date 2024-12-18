@@ -12,7 +12,8 @@
                     <div class="p-6 text-gray-300">
                         <h3 class="text-3xl font-bold mb-4 text-center">Welcome to the Transformers Dashboard!</h3>
                         <p class="mb-4 text-center">{{ __("You're logged in!") }}</p>
-                        <p class="mb-4 text-center">Explore the latest Transformers movies, characters, and toys!</p>
+                        <p class="mb-4 text-center">A community for the transformers fans, by the transformers fans. Create your won characters and upload your favourite toys!</p>
+                        <p class="mb-4 text-center">The movies will rule!</p>
                         
                         <div class="mt-6">
                             <h4 class="text-xl font-semibold mb-2 text-center">Quick Links</h4>
